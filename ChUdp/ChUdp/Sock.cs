@@ -17,7 +17,8 @@ namespace ChUdp
         {
             this.port = port;
             socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
-            socket.Connect(new IPEndPoint(IPAddress.Broadcast, port));
+            socket.EnableBroadcast = true;
+            socket.Bind(new IPEndPoint(IPAddress.Any, port));
         }
 
         public void SendBytes(byte[] buffer)
@@ -32,12 +33,12 @@ namespace ChUdp
 
         public async Task<Tuple<byte[], IPAddress>> ReceiveBytes()
         {
-            byte[] buffer = new byte[socket.Available];
+            byte[] buffer = new byte[65536];
             EndPoint sender = new IPEndPoint(IPAddress.Any, port);
-            await Task.Run(() => socket.ReceiveFrom(buffer, ref sender));
+            await Task.Run(() => Array.Resize(ref buffer, socket.ReceiveFrom(buffer, ref sender)));
             return new Tuple<byte[], IPAddress>(buffer, ((IPEndPoint)sender).Address);
         }
-
+        
         public async Task<Tuple<string, IPAddress>> ReceiveString()
         {
             var t = await ReceiveBytes();
