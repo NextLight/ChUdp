@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        
+        <Grid x:Name="gridLogin">
+            <Label Content="Name:" HorizontalAlignment="Left" Margin="171,125,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="220,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+            <Button x:Name="btnLogin" Content="Button" HorizontalAlignment="Left" Margin="220,172,0,0" VerticalAlignment="Top" Width="75"/>
+        </Grid>
     </Grid>
 </Window>
