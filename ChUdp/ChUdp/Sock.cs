@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -11,20 +9,21 @@ namespace ChUdp
     class Sock
     {
         Socket socket;
+        readonly EndPoint broadcastEndPoint;
         int port;
-        // 12345 is broadcast
+        // 12345 is for broadcast
         public Sock(int port = 12345)
         {
             this.port = port;
             socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             socket.EnableBroadcast = true;
             socket.Bind(new IPEndPoint(IPAddress.Any, port));
-            socket.Connect(IPAddress.Broadcast, port);
+            broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
         }
 
         public void SendBytes(byte[] buffer)
         {
-            socket.Send(buffer);
+            socket.SendTo(buffer, broadcastEndPoint);
         }
 
         public void SendString(string s)
