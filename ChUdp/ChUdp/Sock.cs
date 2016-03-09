@@ -8,17 +8,16 @@ namespace ChUdp
 {
     class Sock
     {
-        Socket socket;
-        readonly EndPoint broadcastEndPoint;
-        readonly int port;
-        // 12345 is for broadcast
-        public Sock(int port = 12345)
+        private readonly Socket socket;
+        private readonly EndPoint broadcastEndPoint;
+        private readonly int port;
+
+        public Sock(int port = 12345) // 12345 is for broadcast
         {
             this.port = port;
-            socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
-            socket.EnableBroadcast = true;
-            socket.Bind(new IPEndPoint(IPAddress.Any, port));
             broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
+            socket = new Socket(SocketType.Dgram, ProtocolType.Udp) {EnableBroadcast = true};
+            socket.Bind(new IPEndPoint(IPAddress.Any, port));
         }
 
         private async Task<bool> SendBytesAsync(byte[] buffer)
