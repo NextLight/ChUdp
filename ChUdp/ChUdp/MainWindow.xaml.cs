@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace ChUdp
 {
@@ -20,10 +21,12 @@ namespace ChUdp
             // TODO send name
             gridLogin.Visibility = Visibility.Hidden;
             gridMain.Visibility = Visibility.Visible;
+            txtMessage.Focus();
             while (true)
             {
                 var t = await sock.ReceiveStringAsync();
                 textBlock.Text += t.Item2.MapToIPv4() + ": " + t.Item1 + '\n';
+                scrollViewer.ScrollToBottom();
             }
         }
 
