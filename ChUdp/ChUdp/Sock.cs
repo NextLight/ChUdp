@@ -11,9 +11,11 @@ namespace ChUdp
     class Sock
     {
         Socket socket;
+        int port;
         // 12345 is broadcast
         public Sock(int port = 12345)
         {
+            this.port = port;
             socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             socket.Connect(new IPEndPoint(IPAddress.Broadcast, port));
         }
@@ -31,7 +33,7 @@ namespace ChUdp
         public async Task<Tuple<byte[], IPAddress>> ReceiveBytes()
         {
             byte[] buffer = new byte[socket.Available];
-            EndPoint sender = new IPEndPoint(IPAddress.Any, 1234);
+            EndPoint sender = new IPEndPoint(IPAddress.Any, port);
             await Task.Run(() => socket.ReceiveFrom(buffer, ref sender));
             return new Tuple<byte[], IPAddress>(buffer, ((IPEndPoint)sender).Address);
         }
