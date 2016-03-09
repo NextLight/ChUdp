@@ -10,7 +10,7 @@ namespace ChUdp
     {
         Socket socket;
         readonly EndPoint broadcastEndPoint;
-        int port;
+        readonly int port;
         // 12345 is for broadcast
         public Sock(int port = 12345)
         {
@@ -21,17 +21,17 @@ namespace ChUdp
             broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
         }
 
-        public void SendBytes(byte[] buffer)
+        private async Task<bool> SendBytesAsync(byte[] buffer)
         {
-            socket.SendTo(buffer, broadcastEndPoint);
+            return await Task.Run(() => socket.SendTo(buffer, broadcastEndPoint) == buffer.Length);
         }
 
-        public void SendString(string s)
+        public async Task<bool> SendStringAsync(string s)
         {
-            SendBytes(Encoding.UTF8.GetBytes(s));
+            return await SendBytesAsync(Encoding.UTF8.GetBytes(s));
         }
 
-        public async Task<Tuple<byte[], IPAddress>> ReceiveBytes()
+        private async Task<Tuple<byte[], IPAddress>> ReceiveBytesAsync()
         {
             byte[] buffer = new byte[65536];
             EndPoint sender = new IPEndPoint(IPAddress.Any, port);
@@ -39,9 +39,9 @@ namespace ChUdp
             return new Tuple<byte[], IPAddress>(buffer, ((IPEndPoint)sender).Address);
         }
         
-        public async Task<Tuple<string, IPAddress>> ReceiveString()
+        public async Task<Tuple<string, IPAddress>> ReceiveStringAsync()
         {
-            var t = await ReceiveBytes();
+            var t = await ReceiveBytesAsync();
             return new Tuple<string, IPAddress>(Encoding.UTF8.GetString(t.Item1), t.Item2);
         }
     }

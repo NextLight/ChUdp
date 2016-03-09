@@ -22,14 +22,14 @@ namespace ChUdp
             gridMain.Visibility = Visibility.Visible;
             while (true)
             {
-                var t = await sock.ReceiveString();
+                var t = await sock.ReceiveStringAsync();
                 textBlock.Text += t.Item2.MapToIPv4() + ": " + t.Item1 + '\n';
             }
         }
 
-        private void btnSend_Click(object sender, RoutedEventArgs e)
+        private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            sock.SendString(txtMessage.Text);
+            await sock.SendStringAsync(txtMessage.Text);
         }
     }
 }
