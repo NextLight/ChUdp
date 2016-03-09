@@ -7,10 +7,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Grid x:Name="gridLogin">
+        <Grid x:Name="gridLogin" d:IsHidden="True">
             <Label Content="Name:" HorizontalAlignment="Left" Margin="171,125,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="txtName" HorizontalAlignment="Left" Height="23" Margin="220,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
             <Button x:Name="btnLogin" Content="Button" HorizontalAlignment="Left" Margin="220,172,0,0" VerticalAlignment="Top" Width="75" Click="btnLogin_Click"/>
+        </Grid>
+        <Grid x:Name="gridMain" Visibility="Hidden">
+            <TextBox x:Name="textBlock" Margin="0,0,0,23"/>
+            <TextBox x:Name="txtMessage" Height="23" Margin="0,0,79,0" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+            <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="79" Height="23" Click="btnSend_Click"/>
+
         </Grid>
     </Grid>
 </Window>
