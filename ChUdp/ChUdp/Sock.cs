@@ -19,6 +19,7 @@ namespace ChUdp
             socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
             socket.EnableBroadcast = true;
             socket.Bind(new IPEndPoint(IPAddress.Any, port));
+            socket.Connect(IPAddress.Broadcast, port);
         }
 
         public void SendBytes(byte[] buffer)
