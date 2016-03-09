@@ -14,7 +14,7 @@ namespace ChUdp
     /// </summary>
     public partial class MainWindow : Window
     {
-        Sock sock;
+        private Sock sock;
         public MainWindow()
         {
             InitializeComponent();
@@ -26,16 +26,11 @@ namespace ChUdp
             // TODO send name
             gridLogin.Visibility = Visibility.Hidden;
             gridMain.Visibility = Visibility.Visible;
-            await Task.Run(async () =>
+            while (true)
             {
-                while (true)
-                {
-                    var t = await sock.ReceiveString();
-                    textBlock.Text += t.Item2.ToString() + ": " + t.Item1 + '\n';
-                    Thread.Sleep(70);
-                }
+                var t = await sock.ReceiveString();
+                textBlock.Text += t.Item2.MapToIPv4() + ": " + t.Item1 + '\n';
             }
-            );
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
