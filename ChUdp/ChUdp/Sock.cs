@@ -8,11 +8,12 @@ namespace ChUdp
 {
     class Sock
     {
+        public enum Header : byte { Name = 1, Broadcast, Private }
         Socket socket;
-        readonly EndPoint broadcastEndPoint;
+        readonly IPEndPoint broadcastEndPoint;
         readonly int port;
-        // 12345 is for broadcast
-        public Sock(int port = 12345)
+
+        public Sock(int port)
         {
             this.port = port;
             socket = new Socket(SocketType.Dgram, ProtocolType.Udp);
@@ -21,15 +22,14 @@ namespace ChUdp
             broadcastEndPoint = new IPEndPoint(IPAddress.Broadcast, port);
         }
 
-        private async Task<bool> SendBytesAsync(byte[] buffer)
-        {
-            return await Task.Run(() => socket.SendTo(buffer, broadcastEndPoint) == buffer.Length);
-        }
+        private async Task<bool> SendBytesAsync(byte[] buffer, IPEndPoint endPoint) =>
+            await Task.Run(() => socket.SendTo(buffer, endPoint) == buffer.Length);
 
-        public async Task<bool> SendStringAsync(string s)
-        {
-            return await SendBytesAsync(Encoding.UTF8.GetBytes(s));
-        }
+        public async Task<bool> SendStringAsync(string s, Header h, IPEndPoint endPoint) =>
+            await SendBytesAsync(Encoding.UTF8.GetBytes((char)0 + (char)h + s), endPoint);
+
+        public async Task<bool> SendStringAsync(string s, Header h) =>
+            await SendStringAsync(s, h, broadcastEndPoint);
 
         private async Task<Tuple<byte[], IPAddress>> ReceiveBytesAsync()
         {
@@ -46,3 +46,4 @@ namespace ChUdp
         }
     }
 }
+
