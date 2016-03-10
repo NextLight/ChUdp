@@ -8,28 +8,28 @@ namespace ChUdp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Sock sock;
+        private ChatUdp chat;
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private async void btnLogin_Click(object sender, RoutedEventArgs e)
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            sock = new Sock();
-            // TODO send name
             gridLogin.Visibility = Visibility.Hidden;
             gridMain.Visibility = Visibility.Visible;
-            while (true)
-            {
-                var t = await sock.ReceiveStringAsync();
-                textBlock.Text += t.Item2.MapToIPv4() + ": " + t.Item1 + '\n';
-            }
+            chat = new ChatUdp(txtName.Text);
+            chat.NewMessage += Chat_NewMessage;
+        }
+
+        private void Chat_NewMessage(object sender, UdpMessageArgs e)
+        {
+            // TODO
         }
 
         private async void btnSend_Click(object sender, RoutedEventArgs e)
         {
-            await sock.SendStringAsync(txtMessage.Text);
+            await chat.SendMessageAsync(txtMessage.Text);
         }
     }
 }
