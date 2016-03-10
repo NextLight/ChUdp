@@ -8,7 +8,7 @@ namespace ChUdp
 {
     class Sock
     {
-        public enum Header : byte { Name = 1, Broadcast, Private }
+        public enum Header : byte { NameRequest, NameReply, Broadcast, Private }
         Socket socket;
         readonly IPEndPoint broadcastEndPoint;
         readonly int port;
